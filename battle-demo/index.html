@@ -681,9 +681,11 @@
 
         // Initialize turn order
         function initTurnOrder() {
-            gameState.turnOrder = [...gameState.heroes.map(h => ({...h, type: 'hero'})), 
+            gameState.turnOrder = [...gameState.heroes.map(h => ({...h, type: 'hero'})),
                                    ...gameState.enemies.map(e => ({...e, type: 'enemy'}))];
             gameState.turnIndex = 0;
+            console.log('Turn order initialized:', gameState.turnOrder.map(t => t.name));
+            addLog('Battle Start! Turn order: ' + gameState.turnOrder.map(t => t.name).join(' → '));
             highlightCurrentTurn();
         }
 
@@ -1025,20 +1027,24 @@
 
         // Enemy AI
         function enemyTurn() {
+            console.log('Enemy turn starting...');
             const enemy = gameState.turnOrder[gameState.turnIndex];
             if (!enemy || enemy.hp <= 0) {
+                console.log('Enemy dead or invalid, skipping turn');
                 nextTurn();
                 return;
             }
-            
+
             const livingHeroes = gameState.heroes.filter(h => h.hp > 0);
             if (livingHeroes.length === 0) {
+                console.log('All heroes dead');
                 checkBattleEnd();
                 return;
             }
-            
+
             const target = livingHeroes[Math.floor(Math.random() * livingHeroes.length)];
-            
+            console.log('Boss targeting:', target.name);
+
             setTimeout(() => {
                 performAttack(enemy.id, target.id);
             }, 800);
@@ -1103,6 +1109,8 @@
             if (gameState.turnIndex >= gameState.turnOrder.length) {
                 gameState.turnIndex = 0;
             }
+            const current = gameState.turnOrder[gameState.turnIndex];
+            console.log('Next turn:', current ? current.name : 'none');
             highlightCurrentTurn();
         }
 
