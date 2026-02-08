@@ -592,33 +592,51 @@
                 top: 5px;
             }
 
-            /* Keep characters normal size on mobile */
+            /* Mobile: smaller characters to fit screen */
             .hero {
-                width: 128px !important;
-                height: 192px !important;
+                width: 96px !important;
+                height: 144px !important;
             }
 
-            #hero1 { bottom: 80px !important; right: 200px !important; }
-            #hero2 { bottom: 75px !important; right: 50px !important; }
-            #hero3 { bottom: 85px !important; right: 350px !important; }
+            /* Reposition heroes to be fully visible on mobile */
+            #hero1 { bottom: 120px !important; left: 50% !important; transform: translateX(-50px) !important; }
+            #hero2 { bottom: 115px !important; right: 20px !important; left: auto !important; }
+            #hero3 { bottom: 125px !important; left: 20px !important; }
 
             #enemy1 {
-                width: 240px !important;
-                height: 240px !important;
-                bottom: 320px !important;
+                width: 180px !important;
+                height: 180px !important;
+                bottom: 350px !important;
                 left: 50% !important;
                 transform: translateX(-50%) !important;
             }
 
+            /* Mobile: stats BELOW characters instead of above */
             .stats {
-                font-size: 9px !important;
-                padding: 5px !important;
-                width: 100px !important;
-                top: -85px !important;
+                font-size: 7px !important;
+                padding: 3px !important;
+                width: 85px !important;
+                top: auto !important;
+                bottom: -65px !important;
+                background: rgba(0, 0, 0, 0.9) !important;
             }
 
             .character-name {
-                font-size: 10px !important;
+                font-size: 8px !important;
+                margin-bottom: 2px !important;
+            }
+
+            .hp-bar, .mp-bar {
+                height: 10px !important;
+                margin: 2px 0 !important;
+            }
+
+            .stat-text {
+                font-size: 6px !important;
+            }
+
+            #battle-bg {
+                height: 68% !important;
             }
 
             .battle-menu {
@@ -626,7 +644,7 @@
                 left: 10px !important;
                 right: auto !important;
                 width: calc(60% - 15px) !important;
-                height: 28% !important;
+                height: 30% !important;
             }
 
             .menu-buttons button {
