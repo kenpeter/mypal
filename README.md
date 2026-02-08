@@ -6,7 +6,17 @@ A JavaScript-based battle system demo using **REAL artwork** from the classic Ch
 
 **▶️ [Play Now on GitHub Pages](https://kenpeter.github.io/mypal/)**
 
-Click the link above to play the demo directly in your browser - no installation required!
+Click the link above to play the demo directly in your browser - **no installation or server required!**
+
+### First Time Setup (Enable GitHub Pages):
+1. Go to https://github.com/kenpeter/mypal/settings/pages
+2. Under "Source", select **Deploy from a branch**
+3. Under "Branch", select **main** and **/ (root)**
+4. Click **Save**
+5. Wait 1-2 minutes for deployment
+6. Refresh https://kenpeter.github.io/mypal/
+
+The game runs entirely in your browser - the `server.js` is only needed for local development!
 
 ## 🎮 How to Play Locally
 
