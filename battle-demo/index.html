@@ -706,7 +706,10 @@
 
             const element = document.getElementById(current.id);
             if (element) {
-                element.querySelector('.turn-indicator').classList.add('active');
+                const turnIndicator = element.querySelector('.turn-indicator');
+                if (turnIndicator) {
+                    turnIndicator.classList.add('active');
+                }
             }
 
             // Update turn display
