@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAL1 Sound Picker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        h1 { color: #4ecdc4; }
+        .sound-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .sound-btn {
+            background: #2a2a2a;
+            border: 2px solid #4ecdc4;
+            color: #4ecdc4;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .sound-btn:hover {
+            background: #4ecdc4;
+            color: #000;
+            transform: scale(1.05);
+        }
+        .sound-btn.playing {
+            background: #e94560;
+            border-color: #e94560;
+            color: #fff;
+        }
+        .instructions {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4ecdc4;
+        }
+        .selected {
+            background: #4a4a4a;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .copy-btn {
+            background: #4ecdc4;
+            color: #000;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .copy-btn:hover {
+            background: #7fdbda;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎵 PAL1 Sound Picker</h1>
+
+    <div class="instructions">
+        <h3>How to use:</h3>
+        <ol>
+            <li>Click buttons to play sounds</li>
+            <li>Find sounds you like for: Hero Attack, Boss Attack, Hit</li>
+            <li>Copy the commands below to update your game</li>
+        </ol>
+    </div>
+
+    <div class="selected">
+        <strong>Selected Sounds:</strong><br>
+        Hero Attack: <span id="hero-choice">VOC15</span>
+        <button class="copy-btn" onclick="copyCommand('hero')">Use This</button><br>
+        Boss Attack: <span id="boss-choice">VOC22</span>
+        <button class="copy-btn" onclick="copyCommand('boss')">Use This</button><br>
+        Hit Sound: <span id="hit-choice">VOC12</span>
+        <button class="copy-btn" onclick="copyCommand('hit')">Use This</button>
+    </div>
+
+    <h2>Test Sounds (VOC1-30):</h2>
+    <div class="sound-grid" id="sound-grid"></div>
+
+    <script>
+        let currentAudio = null;
+        let selectedSounds = {
+            hero: 'VOC15',
+            boss: 'VOC22',
+            hit: 'VOC12'
+        };
+
+        // Generate buttons for VOC1-30
+        const grid = document.getElementById('sound-grid');
+        for (let i = 1; i <= 30; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'sound-btn';
+            btn.textContent = `VOC${i}`;
+            btn.onclick = () => playSound(i, btn);
+
+            // Add right-click menu to select sound type
+            btn.oncontextmenu = (e) => {
+                e.preventDefault();
+                const type = prompt('Set as:\n1 = Hero Attack\n2 = Boss Attack\n3 = Hit Sound', '1');
+                if (type === '1') {
+                    selectedSounds.hero = `VOC${i}`;
+                    document.getElementById('hero-choice').textContent = `VOC${i}`;
+                } else if (type === '2') {
+                    selectedSounds.boss = `VOC${i}`;
+                    document.getElementById('boss-choice').textContent = `VOC${i}`;
+                } else if (type === '3') {
+                    selectedSounds.hit = `VOC${i}`;
+                    document.getElementById('hit-choice').textContent = `VOC${i}`;
+                }
+            };
+
+            grid.appendChild(btn);
+        }
+
+        function playSound(num, btn) {
+            // Stop current audio
+            if (currentAudio) {
+                currentAudio.pause();
+                document.querySelectorAll('.sound-btn').forEach(b => b.classList.remove('playing'));
+            }
+
+            // Play new audio
+            currentAudio = new Audio(`sounds/VOC${num}.mp3`);
+            btn.classList.add('playing');
+            currentAudio.play().then(() => {
+                currentAudio.onended = () => {
+                    btn.classList.remove('playing');
+                };
+            }).catch(err => {
+                console.error('Play failed:', err);
+                btn.classList.remove('playing');
+                alert(`Could not play VOC${num}.mp3`);
+            });
+        }
+
+        function copyCommand(type) {
+            const voc = selectedSounds[type];
+            const filename = type === 'hero' ? 'hero-attack.mp3' :
+                           type === 'boss' ? 'boss-attack.mp3' : 'hit.mp3';
+            const cmd = `cp sounds/${voc}.mp3 ${filename}`;
+
+            navigator.clipboard.writeText(cmd).then(() => {
+                alert(`Copied command:\n${cmd}\n\nRun this in terminal at:\n/Users/kenpeter/Documents/work/mypal/`);
+            }).catch(() => {
+                prompt('Copy this command:', cmd);
+            });
+        }
+    </script>
+</body>
+</html>

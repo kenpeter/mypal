@@ -593,9 +593,20 @@
         </div>
 
         <!-- Background Music -->
-        <audio id="battle-bgm" loop>
+        <audio id="battle-bgm" loop autoplay>
             <source src="battle-bgm.mp3" type="audio/mpeg">
             Your browser does not support audio.
+        </audio>
+
+        <!-- Sound Effects -->
+        <audio id="hero-attack-sound" preload="auto">
+            <source src="hero-attack.mp3" type="audio/mpeg">
+        </audio>
+        <audio id="boss-attack-sound" preload="auto">
+            <source src="boss-attack.mp3" type="audio/mpeg">
+        </audio>
+        <audio id="hit-sound" preload="auto">
+            <source src="hit.mp3" type="audio/mpeg">
         </audio>
 
         <div id="battle-bg">
@@ -938,6 +949,17 @@
                 const heroNames = { hero1: 'xiaoyao', hero2: 'linger', hero3: 'yueru' };
                 const heroName = heroNames[attackerId];
 
+                // Play hero attack sound
+                const heroSound = document.getElementById('hero-attack-sound');
+                heroSound.volume = 1.0; // Max volume
+                heroSound.currentTime = 0;
+                heroSound.play().then(() => {
+                    console.log('Hero attack sound played!');
+                }).catch(err => {
+                    console.log('Hero sound play failed:', err);
+                    addLog('⚠️ Hero sound blocked - click music button first');
+                });
+
                 // SMOOTH MULTI-FRAME SUPER ATTACK Animation
                 attacker.classList.add('attacking');
                 const animTime = playAttackAnimation(attackerId, heroName);
@@ -949,6 +971,16 @@
                     sprite.style.backgroundImage = `url('images/sprites/${heroName}.png')`;
                 }, 800);
             } else {
+                // Play boss attack sound
+                const bossSound = document.getElementById('boss-attack-sound');
+                bossSound.volume = 1.0; // Max volume
+                bossSound.currentTime = 0;
+                bossSound.play().then(() => {
+                    console.log('Boss attack sound played!');
+                }).catch(err => {
+                    console.log('Boss sound play failed:', err);
+                });
+
                 // Enemy attack animation
                 attacker.classList.add('attacking');
                 setTimeout(() => attacker.classList.remove('attacking'), 800);
@@ -964,6 +996,16 @@
                 (Math.floor(Math.random() * 50) + 80);  // Hero super damage
 
             setTimeout(() => {
+                // Play hit sound when damage is dealt
+                const hitSound = document.getElementById('hit-sound');
+                hitSound.volume = 1.0; // Max volume
+                hitSound.currentTime = 0;
+                hitSound.play().then(() => {
+                    console.log('Hit sound played!');
+                }).catch(err => {
+                    console.log('Hit sound play failed:', err);
+                });
+
                 target.classList.add('hurting');
                 setTimeout(() => target.classList.remove('hurting'), 500);
 
@@ -1194,10 +1236,29 @@
 
         // Music Controls
         const bgm = document.getElementById('battle-bgm');
+        bgm.volume = 0.3; // Lower volume so sound effects can be heard
         const musicToggle = document.getElementById('music-toggle');
         let musicPlaying = false;
 
-        musicToggle.addEventListener('click', () => {
+        // Auto-enable music on any user interaction
+        function enableMusic() {
+            if (!musicPlaying) {
+                bgm.play().then(() => {
+                    musicToggle.textContent = '🔊';
+                    musicToggle.classList.add('playing');
+                    musicPlaying = true;
+                    console.log('Music auto-started!');
+                }).catch(err => {
+                    console.log('Music start failed:', err);
+                });
+            }
+        }
+
+        // Start music on first click anywhere
+        document.addEventListener('click', enableMusic, { once: true });
+
+        musicToggle.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent double-trigger
             if (musicPlaying) {
                 bgm.pause();
                 musicToggle.textContent = '🔇';
@@ -1215,14 +1276,15 @@
             }
         });
 
-        // Try to autoplay (may be blocked by browser)
+        // Try to autoplay immediately (works in some browsers)
         bgm.play().then(() => {
             musicToggle.textContent = '🔊';
             musicToggle.classList.add('playing');
             musicPlaying = true;
+            console.log('Autoplay successful!');
         }).catch(err => {
-            console.log('Autoplay blocked, waiting for user interaction');
-            addLog('🎵 Click the music button (bottom right) to play BGM!');
+            console.log('Autoplay blocked, will start on first click');
+            addLog('🎵 Music will start automatically!');
         });
 
         // Initialize
