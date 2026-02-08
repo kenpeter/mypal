@@ -412,6 +412,35 @@
         #bg-selector {
             display: none;
         }
+
+        /* Turn Display - Top Right */
+        #turn-display {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid #e94560;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 11px;
+            color: #fff;
+            text-align: center;
+            min-width: 100px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        #turn-display .turn-label {
+            color: #aaa;
+            font-size: 8px;
+            margin-bottom: 3px;
+        }
+
+        #turn-display .turn-name {
+            color: #e94560;
+            font-weight: bold;
+            font-size: 12px;
+        }
         
         /* Magic Menu Overlay */
         #magic-menu {
@@ -511,7 +540,13 @@
                 <option value="9">👻 Ghost Realm</option>
             </select>
         </div>
-        
+
+        <!-- Turn Display -->
+        <div id="turn-display">
+            <div class="turn-label">当前回合</div>
+            <div class="turn-name">李逍遥</div>
+        </div>
+
         <div id="battle-bg">
             <div id="ground"></div>
             
@@ -655,23 +690,31 @@
         // Highlight whose turn it is
         function highlightCurrentTurn() {
             document.querySelectorAll('.turn-indicator').forEach(el => el.classList.remove('active'));
-            
+
             if (gameState.turnIndex >= gameState.turnOrder.length) {
                 gameState.turnIndex = 0;
             }
-            
+
             const current = gameState.turnOrder[gameState.turnIndex];
             if (!current || current.hp <= 0) {
                 gameState.turnIndex++;
                 highlightCurrentTurn();
                 return;
             }
-            
+
             const element = document.getElementById(current.id);
             if (element) {
                 element.querySelector('.turn-indicator').classList.add('active');
             }
-            
+
+            // Update turn display
+            const turnDisplay = document.querySelector('#turn-display .turn-name');
+            if (turnDisplay) {
+                turnDisplay.textContent = current.name;
+                // Change color based on type
+                turnDisplay.style.color = current.type === 'enemy' ? '#ff6b6b' : '#4ecdc4';
+            }
+
             if (current.type === 'enemy') {
                 setTimeout(enemyTurn, 1000);
             }
