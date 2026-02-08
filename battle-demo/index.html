@@ -763,9 +763,12 @@
         });
 
         function executeMenuAction() {
+            // Prevent actions if battle has ended
+            if (gameState.battleEnded) return;
+
             const action = menuOptions[selectedOption].dataset.action;
             const current = gameState.turnOrder[gameState.turnIndex];
-            
+
             if (!current || current.type !== 'hero') return;
             
             gameState.currentAction = action;
@@ -1120,13 +1123,21 @@
         function checkBattleEnd() {
             const livingHeroes = gameState.heroes.filter(h => h.hp > 0).length;
             const livingEnemies = gameState.enemies.filter(e => e.hp > 0).length;
-            
+
             if (livingHeroes === 0) {
                 gameState.battleEnded = true;
                 addLog('💀 GAME OVER 💀');
+                document.getElementById('battle-menu').style.display = 'none';
+                setTimeout(() => {
+                    alert('💀 战败！所有英雄阵亡！\n\nGAME OVER - All heroes defeated!\n\n刷新页面重新开始 (Refresh to restart)');
+                }, 500);
             } else if (livingEnemies === 0) {
                 gameState.battleEnded = true;
                 addLog('🎉 VICTORY! All enemies defeated! 🎉');
+                document.getElementById('battle-menu').style.display = 'none';
+                setTimeout(() => {
+                    alert('🎉 胜利！成功击败BOSS！\n\nVICTORY - BOSS defeated!\n\n刷新页面重新开始 (Refresh to restart)');
+                }, 500);
             }
         }
 
