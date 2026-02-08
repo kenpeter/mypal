@@ -441,6 +441,46 @@
             font-weight: bold;
             font-size: 12px;
         }
+
+        /* Music Controls - Bottom Right */
+        #music-controls {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            z-index: 20;
+        }
+
+        #music-toggle {
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid #4ecdc4;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #4ecdc4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        #music-toggle:hover {
+            background: rgba(78, 205, 196, 0.2);
+            border-color: #7fdbda;
+            transform: scale(1.1);
+        }
+
+        #music-toggle.playing {
+            border-color: #e94560;
+            color: #e94560;
+        }
+
+        #music-toggle.playing:hover {
+            background: rgba(233, 69, 96, 0.2);
+            border-color: #ff6b96;
+        }
         
         /* Magic Menu Overlay */
         #magic-menu {
@@ -546,6 +586,17 @@
             <div class="turn-label">当前回合</div>
             <div class="turn-name">李逍遥</div>
         </div>
+
+        <!-- Music Controls -->
+        <div id="music-controls">
+            <button id="music-toggle" title="Toggle Battle Music">🔇</button>
+        </div>
+
+        <!-- Background Music -->
+        <audio id="battle-bgm" loop>
+            <source src="battle-bgm.mp3" type="audio/mpeg">
+            Your browser does not support audio.
+        </audio>
 
         <div id="battle-bg">
             <div id="ground"></div>
@@ -1140,6 +1191,39 @@
                 }, 500);
             }
         }
+
+        // Music Controls
+        const bgm = document.getElementById('battle-bgm');
+        const musicToggle = document.getElementById('music-toggle');
+        let musicPlaying = false;
+
+        musicToggle.addEventListener('click', () => {
+            if (musicPlaying) {
+                bgm.pause();
+                musicToggle.textContent = '🔇';
+                musicToggle.classList.remove('playing');
+                musicPlaying = false;
+            } else {
+                bgm.play().then(() => {
+                    musicToggle.textContent = '🔊';
+                    musicToggle.classList.add('playing');
+                    musicPlaying = true;
+                }).catch(err => {
+                    console.log('Audio play failed:', err);
+                    addLog('⚠️ Click music button to play BGM (browser requires user interaction)');
+                });
+            }
+        });
+
+        // Try to autoplay (may be blocked by browser)
+        bgm.play().then(() => {
+            musicToggle.textContent = '🔊';
+            musicToggle.classList.add('playing');
+            musicPlaying = true;
+        }).catch(err => {
+            console.log('Autoplay blocked, waiting for user interaction');
+            addLog('🎵 Click the music button (bottom right) to play BGM!');
+        });
 
         // Initialize
         initTurnOrder();
