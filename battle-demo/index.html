@@ -37,7 +37,7 @@
             position: absolute;
             width: 100%;
             height: 70%;
-            background: url('images/bg/bg0.png') center/cover no-repeat;
+            background: url('images/bg/bg7.png') center/cover no-repeat;  /* Thunder Field */
             image-rendering: pixelated;
             overflow: hidden;
         }
@@ -60,8 +60,8 @@
         
         /* Heroes - REAL PAL1 SPRITES - SCALED UP 3X */
         .hero {
-            width: 192px;  /* 64px × 3 */
-            height: 288px; /* 96px × 3 */
+            width: 128px;  /* 64px × 2 - smaller size */
+            height: 192px; /* 96px × 2 - smaller size */
         }
 
         .hero-sprite {
@@ -75,15 +75,37 @@
             transition: all 0.3s ease;
         }
 
-        /* Attack animation */
+        /* SUPER ATTACK animation */
         .hero.attacking {
-            animation: attackMove 0.6s ease-in-out;
+            animation: superAttack 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        @keyframes attackMove {
-            0% { transform: translateX(0); }
-            50% { transform: translateX(-150px); }
-            100% { transform: translateX(0); }
+        @keyframes superAttack {
+            0% { transform: translateX(0) scale(1); filter: brightness(1); }
+            20% { transform: translateX(-20px) scale(1.1); filter: brightness(1.5) drop-shadow(0 0 20px #ff0); }
+            40% { transform: translateX(-200px) scale(1.2); filter: brightness(2) drop-shadow(0 0 30px #f00); }
+            50% { transform: translateX(-220px) scale(1.3) rotate(-5deg); filter: brightness(3) drop-shadow(0 0 40px #fff); }
+            60% { transform: translateX(-200px) scale(1.2); filter: brightness(2) drop-shadow(0 0 30px #f00); }
+            80% { transform: translateX(-20px) scale(1.1); filter: brightness(1.5); }
+            100% { transform: translateX(0) scale(1); filter: brightness(1); }
+        }
+
+        /* Screen shake on attack */
+        .hero.attacking ~ #battle-bg {
+            animation: screenShake 0.3s ease-in-out 0.4s;
+        }
+
+        @keyframes screenShake {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-5px, 2px); }
+            20% { transform: translate(5px, -2px); }
+            30% { transform: translate(-5px, -2px); }
+            40% { transform: translate(5px, 2px); }
+            50% { transform: translate(-5px, 2px); }
+            60% { transform: translate(5px, -2px); }
+            70% { transform: translate(-5px, -2px); }
+            80% { transform: translate(5px, 2px); }
+            90% { transform: translate(-5px, -2px); }
         }
 
         /* Attack poses */
@@ -99,30 +121,30 @@
             background-image: url('images/sprites/yueru_attack.png');
         }
 
-        /* Hero 1 - Li Xiaoyao */
+        /* Hero 1 - Li Xiaoyao (center) */
         #hero1 {
-            bottom: 50px;
-            right: 150px;
+            bottom: 40px;
+            right: 280px;
         }
 
         #hero1 .hero-sprite {
             background-image: url('images/sprites/xiaoyao.png');
         }
 
-        /* Hero 2 - Zhao Linger */
+        /* Hero 2 - Zhao Linger (right) */
         #hero2 {
-            bottom: 30px;
-            right: 50px;
+            bottom: 35px;
+            right: 100px;
         }
 
         #hero2 .hero-sprite {
             background-image: url('images/sprites/linger.png');
         }
 
-        /* Hero 3 - Lin Yueru */
+        /* Hero 3 - Lin Yueru (left) */
         #hero3 {
-            bottom: 70px;
-            right: 250px;
+            bottom: 45px;
+            right: 460px;
         }
 
         #hero3 .hero-sprite {
@@ -143,18 +165,34 @@
         /* HP/MP Bars */
         .stats {
             position: absolute;
-            top: -50px;
-            left: -18px;
-            width: 100px;
-            font-size: 7px;
+            top: -130px;  /* Position above character head (adjusted for smaller sprites) */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 110px;
+            font-size: 9px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 6px;
+            border-radius: 6px;
+            border: 2px solid #555;
         }
-        
+
+        .character-name {
+            color: #fff;
+            font-size: 9px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            text-align: center;
+            text-shadow: 1px 1px 2px #000;
+        }
+
         .hp-bar, .mp-bar {
             height: 8px;
-            background: #333;
-            border: 1px solid #666;
-            margin-bottom: 2px;
+            background: #222;
+            border: 1px solid #555;
+            margin-bottom: 3px;
             position: relative;
+            border-radius: 2px;
+            overflow: hidden;
         }
         
         .hp-fill {
@@ -176,6 +214,7 @@
             color: #fff;
             font-size: 6px;
             line-height: 8px;
+            text-shadow: 1px 1px 1px #000;
         }
         
         /* Enemies - REAL PAL1 SPRITES */
@@ -197,8 +236,8 @@
         #enemy1 {
             width: 320px;  /* Large boss monster */
             height: 320px;
-            bottom: 200px;  /* Moved higher up */
-            left: 100px;
+            bottom: 180px;  /* Better vertical spacing */
+            left: 120px;    /* Better horizontal spacing */
         }
 
         #enemy1 .enemy-sprite {
@@ -337,23 +376,9 @@
             z-index: 100;
         }
         
-        /* Turn Indicator */
+        /* Turn Indicator - HIDDEN */
         .turn-indicator {
-            position: absolute;
-            top: -55px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #e94560;
-            color: #fff;
-            padding: 5px 15px;
-            font-size: 10px;
-            border-radius: 5px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .turn-indicator.active {
-            opacity: 1;
+            display: none;
         }
         
         /* Target selection */
@@ -383,23 +408,9 @@
             border: 2px solid #e94560;
         }
         
-        /* Background selector */
+        /* Background selector - HIDDEN */
         #bg-selector {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 20;
-        }
-        
-        #bg-selector select {
-            background: rgba(0,0,0,0.8);
-            color: #fff;
-            border: 2px solid #e94560;
-            padding: 8px;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 8px;
-            cursor: pointer;
-            border-radius: 5px;
+            display: none;
         }
         
         /* Magic Menu Overlay */
@@ -449,7 +460,13 @@
             color: #3498db;
             font-size: 7px;
         }
-        
+
+        /* Flash effect for super attacks */
+        @keyframes flash {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(2); background: rgba(255, 255, 255, 0.3); }
+        }
+
         .close-menu {
             margin-top: 15px;
             color: #e94560;
@@ -502,6 +519,7 @@
             <div class="character hero" id="hero1" data-name="Li Xiaoyao" data-hp="450" data-max-hp="450" data-mp="120" data-max-mp="120">
                 <div class="turn-indicator">TURN</div>
                 <div class="stats">
+                    <div class="character-name">李逍遥</div>
                     <div class="hp-bar">
                         <div class="hp-fill" style="width: 100%;"></div>
                         <span class="stat-text">HP: 450/450</span>
@@ -512,12 +530,12 @@
                     </div>
                 </div>
                 <div class="hero-sprite"></div>
-                <div class="hero-name">Li Xiaoyao</div>
             </div>
             
             <div class="character hero" id="hero2" data-name="Zhao Linger" data-hp="320" data-max-hp="320" data-mp="280" data-max-mp="280">
                 <div class="turn-indicator">TURN</div>
                 <div class="stats">
+                    <div class="character-name">赵灵儿</div>
                     <div class="hp-bar">
                         <div class="hp-fill" style="width: 100%;"></div>
                         <span class="stat-text">HP: 320/320</span>
@@ -528,12 +546,12 @@
                     </div>
                 </div>
                 <div class="hero-sprite"></div>
-                <div class="hero-name">Zhao Linger</div>
             </div>
             
             <div class="character hero" id="hero3" data-name="Lin Yueru" data-hp="380" data-max-hp="380" data-mp="80" data-max-mp="80">
                 <div class="turn-indicator">TURN</div>
                 <div class="stats">
+                    <div class="character-name">林月如</div>
                     <div class="hp-bar">
                         <div class="hp-fill" style="width: 100%;"></div>
                         <span class="stat-text">HP: 380/380</span>
@@ -544,7 +562,6 @@
                     </div>
                 </div>
                 <div class="hero-sprite"></div>
-                <div class="hero-name">Lin Yueru</div>
             </div>
             
             <!-- Enemies - REAL PAL1 SPRITES -->
@@ -755,37 +772,101 @@
         }
 
         // Attack
+        // Animate attack frames smoothly
+        function playAttackAnimation(heroId, heroName) {
+            const sprite = document.querySelector(`#${heroId} .hero-sprite`);
+            // Smooth attack sequence: standing -> ready -> attack -> ready -> standing
+            const frameSequence = [
+                `images/sprites/${heroName}.png`,       // Standing pose
+                `images/sprites/${heroName}_attack6.png`, // Attack ready
+                `images/sprites/${heroName}_attack7.png`, // Attack peak
+                `images/sprites/${heroName}_attack6.png`, // Return to ready
+                `images/sprites/${heroName}.png`          // Back to standing
+            ];
+
+            let frameIndex = 0;
+            const frameInterval = setInterval(() => {
+                if (frameIndex < frameSequence.length) {
+                    sprite.style.backgroundImage = `url('${frameSequence[frameIndex]}')`;
+                    frameIndex++;
+                } else {
+                    clearInterval(frameInterval);
+                }
+            }, 80); // 80ms per frame for smooth motion
+
+            return frameSequence.length * 80; // Return total animation time
+        }
+
+        function playMagicAnimation(heroId, heroName) {
+            const sprite = document.querySelector(`#${heroId} .hero-sprite`);
+            // Smooth magic sequence: standing -> cast start -> cast peak -> cast start -> standing
+            const frameSequence = [
+                `images/sprites/${heroName}.png`,         // Standing pose
+                `images/sprites/${heroName}_attack8.png`, // Magic start
+                `images/sprites/${heroName}_attack9.png`, // Magic peak
+                `images/sprites/${heroName}_attack8.png`, // Return to start
+                `images/sprites/${heroName}.png`          // Back to standing
+            ];
+
+            let frameIndex = 0;
+            const frameInterval = setInterval(() => {
+                if (frameIndex < frameSequence.length) {
+                    sprite.style.backgroundImage = `url('${frameSequence[frameIndex]}')`;
+                    frameIndex++;
+                } else {
+                    clearInterval(frameInterval);
+                }
+            }, 100); // 100ms per frame for magic casting
+
+            return frameSequence.length * 100; // Return total animation time
+        }
+
         function performAttack(attackerId, targetId) {
             const attacker = document.getElementById(attackerId);
             const target = document.getElementById(targetId);
             const attackerData = gameState.turnOrder.find(t => t.id === attackerId);
             const targetData = gameState.enemies.find(e => e.id === targetId) || gameState.heroes.find(h => h.id === targetId);
-            
-            // Attack Animation (move forward + change sprite)
+
+            // Determine hero sprite name
+            const heroNames = { hero1: 'xiaoyao', hero2: 'linger', hero3: 'yueru' };
+            const heroName = heroNames[attackerId];
+
+            // SMOOTH MULTI-FRAME SUPER ATTACK Animation
             attacker.classList.add('attacking');
-            setTimeout(() => attacker.classList.remove('attacking'), 600);
-            
-            // Damage calculation
-            const damage = Math.floor(Math.random() * 30) + 40;
-            
+            const animTime = playAttackAnimation(attackerId, heroName);
+
+            setTimeout(() => {
+                attacker.classList.remove('attacking');
+                // Reset to standing sprite
+                const sprite = document.querySelector(`#${attackerId} .hero-sprite`);
+                sprite.style.backgroundImage = `url('images/sprites/${heroName}.png')`;
+            }, 800);
+
+            // Flash effect at peak of animation
+            document.body.style.animation = 'flash 0.2s ease-out 0.4s';
+            setTimeout(() => document.body.style.animation = '', 600);
+
+            // Damage calculation (SUPER damage!)
+            const damage = Math.floor(Math.random() * 50) + 80;
+
             setTimeout(() => {
                 target.classList.add('hurting');
                 setTimeout(() => target.classList.remove('hurting'), 500);
-                
+
                 showDamage(target, damage);
                 targetData.hp = Math.max(0, targetData.hp - damage);
                 updateHealthBar(target, targetData.hp, targetData.maxHp);
-                
-                addLog(`${attackerData.name} attacks ${targetData.name} for ${damage} damage!`);
-                
+
+                addLog(`💥 ${attackerData.name} unleashes a SUPER ATTACK on ${targetData.name} for ${damage} damage!`);
+
                 if (targetData.hp <= 0) {
                     target.style.opacity = '0.3';
                     addLog(`${targetData.name} is defeated!`);
                     checkBattleEnd();
                 }
-                
+
                 nextTurn();
-            }, 400);
+            }, 500);
         }
 
         // Magic Menu
@@ -836,14 +917,24 @@
             const target = document.getElementById(targetId);
             const attackerData = gameState.heroes.find(h => h.id === attackerId);
             const targetData = gameState.enemies.find(e => e.id === targetId) || gameState.heroes.find(h => h.id === targetId);
-            
+
             // Deduct MP
             attackerData.mp -= spell.cost;
             updateMPBar(attacker, attackerData.mp, attackerData.maxMp);
-            
-            // Animation
+
+            // Play magic casting sprite animation (frames 8-9)
+            const heroName = attackerData.name === 'Li Xiaoyao' ? 'xiaoyao' :
+                            attackerData.name === 'Zhao Linger' ? 'linger' : 'yueru';
+            playMagicAnimation(attackerId, heroName);
+
+            // Also add glow effect
             attacker.classList.add('casting');
-            setTimeout(() => attacker.classList.remove('casting'), 800);
+            setTimeout(() => {
+                attacker.classList.remove('casting');
+                // Return to standing pose
+                const sprite = document.querySelector(`#${attackerId} .hero-sprite`);
+                sprite.style.backgroundImage = `url('images/sprites/${heroName}.png')`;
+            }, 800);
             
             setTimeout(() => {
                 if (spell.heal) {
