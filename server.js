@@ -22,18 +22,8 @@ const MIME_TYPES = {
 const server = http.createServer((req, res) => {
     console.log(`${req.method} ${req.url}`);
 
-    // Redirect root to battle-demo
-    if (req.url === '/') {
-        res.writeHead(302, { 'Location': '/battle-demo/' });
-        res.end();
-        return;
-    }
-
-    // Default to index.html for directories
-    let filePath = req.url;
-    if (filePath.endsWith('/')) {
-        filePath += 'index.html';
-    }
+    // Default to index.html for root
+    let filePath = req.url === '/' ? '/index.html' : req.url;
     filePath = path.join(__dirname, filePath);
 
     const extname = path.extname(filePath).toLowerCase();
@@ -58,6 +48,5 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
     console.log('🎮 PAL1 Battle Demo Server Started!');
     console.log(`📍 Open: http://localhost:${PORT}`);
-    console.log(`📍 Direct: http://localhost:${PORT}/battle-demo/`);
     console.log('🛑 Press Ctrl+C to stop');
 });
