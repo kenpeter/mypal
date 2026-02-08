@@ -2,26 +2,42 @@
 
 A JavaScript-based battle system demo using **REAL artwork** from the classic Chinese RPG **仙剑奇侠传 (Sword and Fairy / PAL1)**.
 
-## 🎮 How to Play
+## 🎮 Play Online
 
-1. Navigate to the battle-demo directory
-2. Start the server: `node server.js`
-3. Open **http://localhost:8080** in your browser
-4. Use **Arrow Keys** (↑↓) to navigate the menu
-5. Press **Enter** or **Space** to select an action
-6. Alternatively, use your **mouse** to click menu options and targets
+**▶️ [Play Now on GitHub Pages](https://kenpeter.github.io/mypal/)**
+
+Click the link above to play the demo directly in your browser - no installation required!
+
+## 🎮 How to Play Locally
+
+1. Clone this repository: `git clone git@github.com:kenpeter/mypal.git`
+2. Navigate to the battle-demo directory: `cd mypal/battle-demo`
+3. Start the server: `node server.js`
+4. Open **http://localhost:8080** in your browser
+
+## 🕹️ Controls
+
+- Use **Arrow Keys** (↑↓) to navigate the menu
+- Press **Enter** or **Space** to select an action
+- Alternatively, use your **mouse** to click menu options and targets
 
 ## ⚔️ Battle System
 
-### Heroes (REAL PAL1 Sprites!)
-- **Li Xiaoyao** (李逍遥) - Real 64x96 sprite from SSS.MKF
-- **Zhao Linger** (赵灵儿) - Real 64x96 sprite from SSS.MKF
-- **Lin Yueru** (林月如) - Real 64x96 sprite from SSS.MKF
+### Heroes (REAL PAL1 Battle Sprites with Animations!)
+- **Li Xiaoyao** (李逍遥) - Full-body battle sprite from F.MKF with smooth attack animation
+- **Zhao Linger** (赵灵儿) - Full-body battle sprite from F.MKF with magic effects
+- **Lin Yueru** (林月如) - Full-body battle sprite from F.MKF with special attacks
 
-### Enemies (REAL PAL1 Sprites!)
-- **Miao Warrior** - Real sprite from MGO.MKF
-- **Snake Demon** - Real sprite from MGO.MKF
-- **Ghost Guard** - Real sprite from MGO.MKF
+**Features:**
+- ✨ Authentic multi-frame attack animations from original DOS game
+- 🎬 Smooth frame-by-frame sprite sequences (4-5 frames per attack)
+- 💥 Super attack effects with screen shake and flash
+- 🔄 Standing pose → Attack sequence → Return to standing
+- 📏 Sprites scaled 3x for modern displays with pixelated rendering preserved
+
+### Boss Enemy (REAL PAL1 Sprite!)
+- **Tree Demon Boss** (enemy571.png) - Massive boss sprite from MGO.MKF (320x320)
+- Epic battle against authentic PAL1 boss monster!
 
 ### Commands
 - **Attack** - Basic physical attack
@@ -56,16 +72,23 @@ A JavaScript-based battle system demo using **REAL artwork** from the classic Ch
 - Files: `images/bg/bg0.png` through `images/bg/bg9.png`
 - You can switch between them using the dropdown menu!
 
-**Character Sprites (13 images):**
-- Successfully extracted from SSS4.MSF (338KB sprite database)
-- Real 64x96 pixel sprites from the original game
-- Files: `images/sprites/xiaoyao.png`, `linger.png`, `yueru.png`
-- Plus 10 additional character frames: `char_00.png` through `char_09.png`
+**Hero Battle Sprites (F.MKF - Full Animation Sequences):**
+- Successfully extracted from F.MKF (YJ1 compressed battle animations)
+- 19 battle character files with 10-11 frames each (149 total frames)
+- Multi-frame attack animations for Li Xiaoyao, Zhao Linger, Lin Yueru
+- Standing poses + attack sequences + magic effects
+- Files: `images/sprites/battle/char_X_frameY.png`
 
-**Enemy Sprites (18 images):**
-- Partially converted from MGO.MKF
-- Real sprites from the original game
-- Files: `images/enemies/enemy1.png` through `images/enemies/enemy19.png`
+**Hero Portraits (RGM.MKF):**
+- 88 character portrait busts extracted from RGM.MKF
+- Used for character status and UI elements
+- Files: `images/sprites/hero_XX.png`
+
+**Enemy Sprites (263 images - MGO.MKF):**
+- Successfully extracted 263 enemy sprites from MGO.MKF
+- YJ1 compressed → sMKF structure → RLE frames → PNG
+- Includes Tree Demon Boss (enemy571.png - 20KB, massive sprite!)
+- Files: `images/enemies/enemy1.png` through `images/enemies/enemy631.png`
 
 ### ⚠️ Technical Challenges Found
 
@@ -92,30 +115,44 @@ A JavaScript-based battle system demo using **REAL artwork** from the classic Ch
 
 ```
 PAL Game Files:
-├── FBP.MKF → YJ1 compressed → 320x200 battle backgrounds ✅
-├── SSS.MKF → sMKF structure → Animation frames ❌
-├── MGO.MKF → YJ1 compressed → sMKF → Enemy sprites ⚠️
-├── ABC.MKF → YJ1 compressed → UI elements ❌
-├── FIRE.MKF → Spell effects (not converted)
-├── PAT.MKF → Color palettes (used for conversion)
-└── RNG.MKF → Map tiles (not converted)
+├── FBP.MKF → YJ1 compressed → 320x200 battle backgrounds ✅ (10 backgrounds)
+├── F.MKF → YJ1 compressed → sMKF → Battle animations ✅ (149 frames, 19 characters)
+├── RGM.MKF → sMKF structure → Character portraits ✅ (88 portraits)
+├── MGO.MKF → YJ1 compressed → sMKF → Enemy sprites ✅ (263 enemies)
+├── SSS.MKF → sMKF structure → Game data (objects/events) ⚠️
+├── ABC.MKF → YJ1 compressed → UI elements ⚠️
+├── FIRE.MKF → Spell effects (not yet converted)
+├── PAT.MKF → Color palettes ✅ (used for all conversions)
+└── RNG.MKF → Map tiles (not yet converted)
 ```
 
 ### Sprite Extraction Breakthrough
 
-**The Problem:** Initial attempts to extract SSS files failed because we were looking at the wrong files:
-- `sss0.sss` (167KB) = Event/scene data, not sprites
-- `sss1.sss` (2.3KB) = Scene definitions
-- `sss4.sss` (338KB) = **ACTUAL SPRITE DATABASE** ✨
+**Key Discovery:** Battle sprites are in F.MKF, NOT SSS.MKF!
+- `SSS.MKF` = Game object/event data (not battle graphics)
+- `F.MKF` = Battle character animations with 10-11 frames each
+- `RGM.MKF` = Character portrait busts for UI
+- `MGO.MKF` = Enemy battle sprites
 
-**The Solution:**
-1. Discovered `sss4.sss` contains raw 64x96 pixel data
-2. Each sprite = 6,144 bytes (64 × 96)
-3. File contains 55 sequential sprites (338,336 ÷ 6,144 ≈ 55)
-4. Applied PAL1 color palette (PAT.MKF)
-5. Exported as PNG with transparency
+**Battle Animation Structure (F.MKF):**
+Each character file contains multiple animation frames:
+- Frames 0-3: Death/defeat animation
+- Frames 4-5: Standing/ready pose
+- Frames 6-7: Normal attack sequence
+- Frames 8-9: Magic casting animation
+- Frame 10: Special attack (for some characters)
 
-**Result:** Successfully extracted 55 real character sprites from the 1995 game!
+**Extraction Process:**
+1. Extract F.MKF → individual F0.f, F1.f, F2.f files (one per character)
+2. Decompress YJ1 format → raw data
+3. Extract sMKF structure → individual RLE frames
+4. Convert RLE → PNG using PAT.MKF palette
+5. Result: Multi-frame battle animations!
+
+**Animation Implementation:**
+- Normal attacks use frames 6-7 for coherent sword/physical attack sequence
+- Magic spells use frames 8-9 for casting animations
+- Each action type uses its own dedicated frame sequence to ensure smooth, coherent animations
 
 ### Tools Created
 
