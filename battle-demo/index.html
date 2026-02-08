@@ -716,7 +716,8 @@
             }
 
             if (current.type === 'enemy') {
-                setTimeout(enemyTurn, 1000);
+                addLog(`⚡ ${current.name} is preparing to attack...`);
+                setTimeout(enemyTurn, 800);  // Slightly faster
             }
         }
 
