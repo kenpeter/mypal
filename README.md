@@ -4,9 +4,19 @@ A JavaScript-based battle system demo using **REAL artwork** from the classic Ch
 
 ## 🎮 Play Online
 
-**▶️ [Play Now on GitHub Pages](https://kenpeter.github.io/mypal/)**
+<div align="center">
 
-Click the link above to play the demo directly in your browser - **no installation or server required!**
+### **▶️ [🎮 PLAY NOW - Click Here!](https://kenpeter.github.io/mypal/) 🎮**
+
+*Play directly in your browser - no installation or server required!*
+
+![PAL1 Battle Demo](https://img.shields.io/badge/Status-Live%20Demo-brightgreen?style=for-the-badge)
+![Platform](https://img.shields.io/badge/Platform-Web%20Browser-blue?style=for-the-badge)
+![No Server](https://img.shields.io/badge/Server-Not%20Required-orange?style=for-the-badge)
+
+---
+
+</div>
 
 ### First Time Setup (Enable GitHub Pages):
 1. Go to https://github.com/kenpeter/mypal/settings/pages
