@@ -121,30 +121,30 @@
             background-image: url('images/sprites/yueru_attack.png');
         }
 
-        /* Hero 1 - Li Xiaoyao (center) */
+        /* Hero 1 - Li Xiaoyao (center-right) */
         #hero1 {
             bottom: 40px;
-            right: 280px;
+            right: 180px;  /* Moved more to the right */
         }
 
         #hero1 .hero-sprite {
             background-image: url('images/sprites/xiaoyao.png');
         }
 
-        /* Hero 2 - Zhao Linger (right) */
+        /* Hero 2 - Zhao Linger (rightmost) */
         #hero2 {
             bottom: 35px;
-            right: 100px;
+            right: 30px;  /* Moved more to the right */
         }
 
         #hero2 .hero-sprite {
             background-image: url('images/sprites/linger.png');
         }
 
-        /* Hero 3 - Lin Yueru (left) */
+        /* Hero 3 - Lin Yueru (center-left) */
         #hero3 {
             bottom: 45px;
-            right: 460px;
+            right: 330px;  /* Moved more to the right */
         }
 
         #hero3 .hero-sprite {
@@ -165,7 +165,7 @@
         /* HP/MP Bars */
         .stats {
             position: absolute;
-            top: -130px;  /* Position above character head (adjusted for smaller sprites) */
+            bottom: -75px;  /* Position below character */
             left: 50%;
             transform: translateX(-50%);
             width: 110px;
@@ -234,10 +234,10 @@
         }
         
         #enemy1 {
-            width: 320px;  /* Large boss monster */
-            height: 320px;
-            bottom: 180px;  /* Better vertical spacing */
-            left: 120px;    /* Better horizontal spacing */
+            width: 240px;  /* Reduced boss size to avoid overlap */
+            height: 240px;
+            bottom: 140px;
+            left: 80px;
         }
 
         #enemy1 .enemy-sprite {
@@ -570,7 +570,7 @@
                 <div class="enemy-hp">
                     <div class="enemy-hp-fill" style="width: 100%;"></div>
                 </div>
-                <div class="hero-name" style="color: #e74c3c;">Tree Demon Boss</div>
+                <div class="hero-name" style="color: #e74c3c;">树妖王</div>
             </div>
         </div>
         
