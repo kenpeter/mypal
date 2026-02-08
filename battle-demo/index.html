@@ -165,7 +165,7 @@
         /* HP/MP Bars */
         .stats {
             position: absolute;
-            top: -95px;  /* Position just above character head */
+            top: -20px;  /* Position just above character head */
             left: 50%;
             transform: translateX(-50%);
             width: 110px;
@@ -827,27 +827,38 @@
             const attackerData = gameState.turnOrder.find(t => t.id === attackerId);
             const targetData = gameState.enemies.find(e => e.id === targetId) || gameState.heroes.find(h => h.id === targetId);
 
-            // Determine hero sprite name
-            const heroNames = { hero1: 'xiaoyao', hero2: 'linger', hero3: 'yueru' };
-            const heroName = heroNames[attackerId];
+            const isEnemy = attackerId.startsWith('enemy');
 
-            // SMOOTH MULTI-FRAME SUPER ATTACK Animation
-            attacker.classList.add('attacking');
-            const animTime = playAttackAnimation(attackerId, heroName);
+            // Only do hero animation if attacker is a hero
+            if (!isEnemy) {
+                // Determine hero sprite name
+                const heroNames = { hero1: 'xiaoyao', hero2: 'linger', hero3: 'yueru' };
+                const heroName = heroNames[attackerId];
 
-            setTimeout(() => {
-                attacker.classList.remove('attacking');
-                // Reset to standing sprite
-                const sprite = document.querySelector(`#${attackerId} .hero-sprite`);
-                sprite.style.backgroundImage = `url('images/sprites/${heroName}.png')`;
-            }, 800);
+                // SMOOTH MULTI-FRAME SUPER ATTACK Animation
+                attacker.classList.add('attacking');
+                const animTime = playAttackAnimation(attackerId, heroName);
+
+                setTimeout(() => {
+                    attacker.classList.remove('attacking');
+                    // Reset to standing sprite
+                    const sprite = document.querySelector(`#${attackerId} .hero-sprite`);
+                    sprite.style.backgroundImage = `url('images/sprites/${heroName}.png')`;
+                }, 800);
+            } else {
+                // Enemy attack animation
+                attacker.classList.add('attacking');
+                setTimeout(() => attacker.classList.remove('attacking'), 800);
+            }
 
             // Flash effect at peak of animation
             document.body.style.animation = 'flash 0.2s ease-out 0.4s';
             setTimeout(() => document.body.style.animation = '', 600);
 
-            // Damage calculation (SUPER damage!)
-            const damage = Math.floor(Math.random() * 50) + 80;
+            // Damage calculation
+            const damage = isEnemy ?
+                (attackerData.damage + Math.floor(Math.random() * 30)) :  // Enemy damage
+                (Math.floor(Math.random() * 50) + 80);  // Hero super damage
 
             setTimeout(() => {
                 target.classList.add('hurting');
@@ -857,7 +868,10 @@
                 targetData.hp = Math.max(0, targetData.hp - damage);
                 updateHealthBar(target, targetData.hp, targetData.maxHp);
 
-                addLog(`💥 ${attackerData.name} unleashes a SUPER ATTACK on ${targetData.name} for ${damage} damage!`);
+                const attackMsg = isEnemy ?
+                    `🔥 ${attackerData.name} attacks ${targetData.name} for ${damage} damage!` :
+                    `💥 ${attackerData.name} unleashes a SUPER ATTACK on ${targetData.name} for ${damage} damage!`;
+                addLog(attackMsg);
 
                 if (targetData.hp <= 0) {
                     target.style.opacity = '0.3';
