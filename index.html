@@ -635,6 +635,24 @@
                 font-size: 6px !important;
             }
 
+            /* Mobile: attack animation goes UP instead of sideways */
+            @keyframes attack {
+                0% { transform: translateY(0); }
+                50% { transform: translateY(-120px) scale(1.1); }
+                100% { transform: translateY(0); }
+            }
+
+            /* Boss attacks DOWN on mobile */
+            .enemy.attacking {
+                animation: attack-down 0.8s ease !important;
+            }
+
+            @keyframes attack-down {
+                0% { transform: translateX(-50%) translateY(0); }
+                50% { transform: translateX(-50%) translateY(80px) scale(1.1); }
+                100% { transform: translateX(-50%) translateY(0); }
+            }
+
             #battle-bg {
                 height: 68% !important;
             }
